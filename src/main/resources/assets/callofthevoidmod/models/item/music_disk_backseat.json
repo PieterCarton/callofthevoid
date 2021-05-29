@@ -1,0 +1,6 @@
+{
+  "parent":"minecraft:item/generated",
+  "textures": {
+    "layer0": "callofthevoidmod:item/music_disk_backseat"
+  }
+}

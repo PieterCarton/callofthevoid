@@ -1,0 +1,28 @@
+Entropic Battery: gain charge when broken (amount depends on tier) OR passive gain in void
+			-Multiple tiers with different capacities
+			-Early game power gen
+
+Energy Direction Node:
+	-easy transportation and retention of essence and energy, at the cost of some order
+
+Some sort of material that is unnaffected by order and entropy (bedrock?)
+
+Encased enery tubing:
+	-transport to help avoid crossing of order/entropy
+
+Chunk based energy/essence levels:
+	-overworld: low level order energy
+	-end: low level entropic energy
+	-void: high level entropic energy
+
+	-explosion upon cancelation of order and entropy
+
+	-essence of disassembled items
+	-item transport
+	-gathering precious materials (background essence in void)
+	-ore doubling (residue essence on smelting of ores)
+
+Advancements:
+-Rapid Unscheduled Disassembly
+-Percussive Maintenance
+-Yes, it needs to be red

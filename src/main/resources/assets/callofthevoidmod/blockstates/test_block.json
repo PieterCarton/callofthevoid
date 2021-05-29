@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "callofthevoidmod:block/test_block",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "callofthevoidmod:block/test_block"
+    },
+    "axis=z": {
+      "model": "callofthevoidmod:block/test_block",
+      "x": 90
+    }
+  }
+}

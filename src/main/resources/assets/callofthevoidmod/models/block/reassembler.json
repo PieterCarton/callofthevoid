@@ -1,0 +1,13 @@
+{
+	"parent":"minecraft:block/cube",
+	"ambientocclusion":"false",
+	"textures":{
+		"particle": "callofthevoidmod:block/reassembler_side",
+		"down": "callofthevoidmod:block/reassembler_bottom",
+		"up": "callofthevoidmod:block/reassembler_top",
+		"north": "callofthevoidmod:block/reassembler_side",
+		"east": "callofthevoidmod:block/reassembler_side",
+		"south": "callofthevoidmod:block/reassembler_side",
+		"west": "callofthevoidmod:block/reassembler_side"
+	}
+}

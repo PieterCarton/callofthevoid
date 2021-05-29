@@ -1,0 +1,16 @@
+{
+  "itemGroup.Call of the Void": "Call of the Void",
+  "item.callofthevoidmod.custom_ingot": "Custom Ingot",
+  "item.callofthevoidmod.entropic_essence": "Entropic Essence",
+  "item.callofthevoidmod.order_essence": "Order Essence",
+  "item.callofthevoidmod.essence_analyser": "Essence Analyser",
+  "item.callofthevoidmod.music_disk_backseat": "Music Disc",
+  "item.callofthevoidmod.music_disk_backseat.desc": "Backseat",
+  "item.callofthevoidmod.pipe_wrench": "Pipe Wrench",
+  "block.callofthevoidmod.test_block": "Test block",
+  "block.callofthevoidmod.reassembler": "Reassembler",
+  "block.callofthevoidmod.battery_block": "Battery",
+  "block.callofthevoidmod.pipe_block": "Basic Essence Tubing",
+  "container.callofthevoidmod.reassembler": "Reassembler",
+  "callofthevoidmod.subtitle.backseat": "Backseat Disc Start Playing"
+}

@@ -1,0 +1,12 @@
+{
+  "music_disk.backseat":{
+    "category": "record",
+    "subtitle": "callofthevoidmod.subtitle.backseat",
+    "sounds": [
+      {
+        "name": "callofthevoidmod:music/backseat",
+        "stream": "true"
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:block/cube",
+  "ambientocclusion":"false",
+  "textures":{
+    "particle": "callofthevoidmod:block/battery_side",
+    "down": "callofthevoidmod:block/battery_bot",
+    "up": "callofthevoidmod:block/battery_top",
+    "north": "callofthevoidmod:block/battery_side",
+    "east": "callofthevoidmod:block/battery_side",
+    "south": "callofthevoidmod:block/battery_side",
+    "west": "callofthevoidmod:block/battery_side"
+  }
+}

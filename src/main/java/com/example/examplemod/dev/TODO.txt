@@ -1,0 +1,6 @@
+TODO
+Battery
+
+first: how to store data in itemstack
+
+then: create simple block that can count how many times it was destroyed

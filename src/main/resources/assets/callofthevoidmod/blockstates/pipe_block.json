@@ -1,0 +1,62 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "callofthevoidmod:block/pipe_centre"
+      }
+    },
+    {
+      "when": {
+        "north": true
+      },
+      "apply": {
+        "model": "callofthevoidmod:block/pipe_branch"
+      }
+    },
+    {
+      "when": {
+        "east": true
+      },
+      "apply": {
+        "model": "callofthevoidmod:block/pipe_branch",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": true
+      },
+      "apply": {
+        "model": "callofthevoidmod:block/pipe_branch",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": true
+      },
+      "apply": {
+        "model": "callofthevoidmod:block/pipe_branch",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": true
+      },
+      "apply": {
+        "model": "callofthevoidmod:block/pipe_branch",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "down": true
+      },
+      "apply": {
+        "model": "callofthevoidmod:block/pipe_branch",
+        "x": 90
+      }
+    }
+  ]
+}
