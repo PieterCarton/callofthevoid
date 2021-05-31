@@ -33,7 +33,7 @@ public class BatteryBlockTileEntity extends SimpleEssenceStorage implements IPus
     }
 
     public void onCharge() {
-        storageData.set(0, storageData.get(0) + 10);
+        storageData.set(0, storageData.get(0) + 1000);
     }
 
     public void tick() {

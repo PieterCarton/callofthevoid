@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ReassemblerScreen extends ContainerScreen<ReassemblerContainer> implements IHasContainer<ReassemblerContainer> {
+public class ReassemblerScreen extends EssenceStorageScreen<ReassemblerContainer> {
 
     public static final ResourceLocation REASSEMBLER_GUI_TEXTURE = new ResourceLocation(CallOfTheVoidMod.MOD_ID, "textures/gui/container/reassembler.png");
 
@@ -38,10 +38,10 @@ public class ReassemblerScreen extends ContainerScreen<ReassemblerContainer> imp
         this.minecraft.getTextureManager().bindTexture(REASSEMBLER_GUI_TEXTURE);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        int progress = container.getRepairProgressScaled();
-        System.out.println(progress);
+        int progress = ((ReassemblerContainer)getContainer()).getRepairProgressScaled();
         this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
         this.blit(matrixStack, i + 102, j + 29 - progress, 177, 8 - progress, 8, progress);
+        this.drawEssenceDisplay(matrixStack, i + 116, j + 8);
     }
 
     @Override
