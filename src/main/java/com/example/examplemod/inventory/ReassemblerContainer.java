@@ -22,7 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class ReassemblerContainer extends Container {
+public class ReassemblerContainer extends EssenceStorageContainer {
     private final IInventory inventory;
     private final IIntArray reassemblerData;
 
@@ -89,12 +89,5 @@ public class ReassemblerContainer extends Container {
     public int getRepairProgressScaled(){
         int i = reassemblerData.get(0);
         return 9 * i/ 100;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public int getEssenceFillScaled(){
-        int i = reassemblerData.get(2);
-        int j = reassemblerData.get(3);
-        return 31 * i / j;
     }
 }

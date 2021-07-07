@@ -22,7 +22,6 @@ public class ReassemblerScreen extends EssenceStorageScreen<ReassemblerContainer
         this.xSize = 175;
         this.ySize = 131;
         this.playerInventoryTitleY = this.ySize - 94;
-        System.out.println("Screen Created!");
     }
 
     @Override

@@ -24,15 +24,9 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
     private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
     private MultiEssenceStorage storage;
 
-    //TODO remove
-    private int essence = 0;
-    //TODO remove
-    private int maxEssence = 10000;
-
     private int repairTime;
     private int repairTimeTotal = 100;
 
-    //TODO remove unnecessary int fields
     private final IIntArray reassemblerData = new IIntArray() {
 
         @Override
@@ -42,10 +36,6 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
                     return getRepairTime();
                 case 1:
                     return getRepairTimeTotal();
-                case 2:
-                    return essence;
-                case 3:
-                    return maxEssence;
                 default:
                     return 0;
             }
@@ -60,18 +50,12 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
                 case 1:
                     setRepairTimeTotal(value);
                     break;
-                case 2:
-                    essence = value;
-                    break;
-                case 3:
-                    maxEssence = value;
-                    break;
             }
         }
 
         @Override
         public int size() {
-            return 4;
+            return 2;
         }
     };
 
@@ -90,8 +74,7 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
         super.read(state, nbt);
         storage.read(nbt);
         this.items = NonNullList.withSize(1, ItemStack.EMPTY);
-        nbt.putInt("repairTime", getRepairTime());
-        nbt.putInt("essence", getRepairTime());
+        this.repairTime = nbt.getInt("repairTime");
         ItemStackHelper.loadAllItems(nbt, this.items);
     }
 
@@ -100,8 +83,8 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
         super.write(compound);
         storage.write(compound);
         ItemStackHelper.saveAllItems(compound, this.items);
-        this.repairTime = compound.getInt("repairTime");
-        this.essence = compound.getInt("essence");
+
+        compound.putInt("repairTime", getRepairTime());
         return compound;
     }
 

@@ -1,6 +1,7 @@
 package com.example.examplemod.screen;
 
 import com.example.examplemod.CallOfTheVoidMod;
+import com.example.examplemod.inventory.EssenceStorageContainer;
 import com.example.examplemod.inventory.ReassemblerContainer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.IHasContainer;
@@ -24,7 +25,7 @@ public class EssenceStorageScreen<T extends Container> extends ContainerScreen<T
     protected void drawEssenceDisplay(MatrixStack matrixStack, int x, int y) {
         this.minecraft.getTextureManager().bindTexture(ESSENCE_DISPLAY);
         this.blit(matrixStack, x, y, 16, 0, 8, 31);
-        int fill = ((ReassemblerContainer)this.getContainer()).getEssenceFillScaled();
+        int fill = ((EssenceStorageContainer)this.getContainer()).getEssenceFillScaled();
         this.blit(matrixStack, x, y, 0, 0, 8, 31 - fill);
     }
 }
