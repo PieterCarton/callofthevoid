@@ -1,10 +1,10 @@
 package com.example.examplemod.tileentity;
 
+import com.example.examplemod.essence.MultiEssenceStorage;
 import com.example.examplemod.essence.EssenceQuantity;
 import com.example.examplemod.essence.EssenceType;
 import com.example.examplemod.essence.IEssenceStorage;
 import com.example.examplemod.inventory.ReassemblerContainer;
-import com.example.examplemod.setup.ModContainerTypes;
 import com.example.examplemod.setup.ModTileEntityTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerInventory;
@@ -22,10 +22,17 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class ReassemblerTileEntity extends LockableLootTileEntity implements ITickableTileEntity, IEssenceStorage {
     private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
+    private MultiEssenceStorage storage;
+
+    //TODO remove
     private int essence = 0;
+    //TODO remove
     private int maxEssence = 10000;
+
     private int repairTime;
     private int repairTimeTotal = 100;
+
+    //TODO remove unnecessary int fields
     private final IIntArray reassemblerData = new IIntArray() {
 
         @Override
@@ -68,12 +75,10 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
         }
     };
 
-    //TODO
-    //NBTread and write to save tileEntity when chunk unloaded
-    //NonNulList of items
-
     public ReassemblerTileEntity(){
         super(ModTileEntityTypes.REASSEMBLER.get());
+        storage = new MultiEssenceStorage(1000, 0);
+        storage.addCompartment(EssenceType.ORDER, 1000);
     }
 
     public ReassemblerTileEntity(TileEntityType type){
@@ -83,6 +88,7 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
     @Override
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
+        storage.read(nbt);
         this.items = NonNullList.withSize(1, ItemStack.EMPTY);
         nbt.putInt("repairTime", getRepairTime());
         nbt.putInt("essence", getRepairTime());
@@ -92,6 +98,7 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
+        storage.write(compound);
         ItemStackHelper.saveAllItems(compound, this.items);
         this.repairTime = compound.getInt("repairTime");
         this.essence = compound.getInt("essence");
@@ -161,43 +168,31 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
 
     @Override
     public EssenceQuantity receiveEssence(EssenceQuantity quantity) {
-        if (!canReceiveEssence(quantity.getType())) {
-            return quantity;
-        }
-        int received = Math.min(maxEssence - essence, quantity.getQuantity());
-        int leftOver = quantity.getQuantity() - received;
-        essence += received;
-        return new EssenceQuantity(EssenceType.ORDER, leftOver);
+        return storage.receiveEssence(quantity);
     }
 
     @Override
     public EssenceQuantity extractEssence(EssenceQuantity quantity) {
-        return new EssenceQuantity(EssenceType.ORDER, 0);
+        return storage.extractEssence(quantity);
     }
 
     @Override
     public int essenceStored(EssenceType type) {
-        if (type != EssenceType.ORDER) {
-            return 0;
-        }
-        return essence;
+        return storage.essenceStored(type);
     }
 
     @Override
     public int maxEssenceStored(EssenceType type) {
-        if (type != EssenceType.ORDER) {
-            return 0;
-        }
-        return maxEssence;
+        return storage.maxEssenceStored(type);
     }
 
     @Override
     public boolean canReceiveEssence(EssenceType type) {
-        return type == EssenceType.ORDER;
+        return storage.canReceiveEssence(type);
     }
 
     @Override
     public boolean canExtractEssence(EssenceType type) {
-        return false;
+        return storage.canExtractEssence(type);
     }
 }

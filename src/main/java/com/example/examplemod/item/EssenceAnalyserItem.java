@@ -40,24 +40,18 @@ public class EssenceAnalyserItem extends Item {
     }
 
     private void displayEssenceStorageInfo(IEssenceStorage storage, PlayerEntity player) {
-        String order = getEssenceText("order", storage);
-        String entropy = getEssenceText("entropy", storage);
+        String order = getEssenceText(EssenceType.ORDER, storage);
+        String entropy = getEssenceText(EssenceType.ENTROPY, storage);
 
         StringTextComponent info = new StringTextComponent("Essence Stored: \n" + order + "\n" + entropy);
         player.sendMessage(info, Util.DUMMY_UUID);
     }
 
-    private String getEssenceText(String typeName, IEssenceStorage storage) {
-        EssenceType type = EssenceType.ORDER;
-
-        if(typeName.equals("entropy")) {
-            type = EssenceType.ENTROPY;
-        }
-
+    private String getEssenceText(EssenceType type, IEssenceStorage storage) {
         int stored = storage.essenceStored(type);
         int max = storage.maxEssenceStored(type);
 
-        String result = typeName + ": " + stored + "/" + max;
+        String result = type.name() + ": " + stored + "/" + max;
 
         return result;
     }

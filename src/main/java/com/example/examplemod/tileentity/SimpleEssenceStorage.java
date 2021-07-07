@@ -113,7 +113,7 @@ public class SimpleEssenceStorage extends TileEntity implements IEssenceStorage 
     @Override
     public EssenceQuantity receiveEssence(EssenceQuantity quantity) {
         if (this.essenceType != quantity.getType()) {
-            return new EssenceQuantity(quantity.getType(), 0);
+            return quantity;
         }
 
         int maxImportable = Math.min(maxEssence - essence, maxInput);

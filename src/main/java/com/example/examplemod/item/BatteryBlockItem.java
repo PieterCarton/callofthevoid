@@ -31,8 +31,8 @@ public class BatteryBlockItem extends BlockItem {
 
         if(compound != null){
             CompoundNBT blockEntityTag = compound.getCompound("BlockEntityTag");
-            if(blockEntityTag.contains("essence")) {
-                charge = blockEntityTag.getInt("essence");
+            if(blockEntityTag.contains("charge")) {
+                charge = blockEntityTag.getInt("charge");
             }
         }
         TextComponent chargeText = new StringTextComponent("Charge: " + charge);

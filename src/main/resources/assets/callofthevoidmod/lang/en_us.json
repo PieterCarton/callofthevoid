@@ -1,16 +1,20 @@
 {
-  "itemGroup.Call of the Void": "Call of the Void",
+  "callofthevoidmod:advancements.root": "Call of the Void",
+  "callofthevoidmod:advancements.root.description": "Start your journey here!",
+  "callofthevoidmod:advancements.red_wrench": "The color is non-negotiable",
+  "callofthevoidmod:advancements.red_wrench.description": "Craft a pipe wrench!",
+  "block.callofthevoidmod.battery_block": "Battery",
+  "block.callofthevoidmod.pipe_block": "Basic Essence Tubing",
+  "block.callofthevoidmod.reassembler": "Reassembler",
+  "block.callofthevoidmod.test_block": "Test block",
+  "callofthevoidmod.subtitle.backseat": "Backseat Disc Start Playing",
+  "container.callofthevoidmod.reassembler": "Reassembler",
   "item.callofthevoidmod.custom_ingot": "Custom Ingot",
   "item.callofthevoidmod.entropic_essence": "Entropic Essence",
-  "item.callofthevoidmod.order_essence": "Order Essence",
   "item.callofthevoidmod.essence_analyser": "Essence Analyser",
   "item.callofthevoidmod.music_disk_backseat": "Music Disc",
   "item.callofthevoidmod.music_disk_backseat.desc": "Backseat",
+  "item.callofthevoidmod.order_essence": "Order Essence",
   "item.callofthevoidmod.pipe_wrench": "Pipe Wrench",
-  "block.callofthevoidmod.test_block": "Test block",
-  "block.callofthevoidmod.reassembler": "Reassembler",
-  "block.callofthevoidmod.battery_block": "Battery",
-  "block.callofthevoidmod.pipe_block": "Basic Essence Tubing",
-  "container.callofthevoidmod.reassembler": "Reassembler",
-  "callofthevoidmod.subtitle.backseat": "Backseat Disc Start Playing"
+  "itemGroup.Call of the Void": "Call of the Void"
 }

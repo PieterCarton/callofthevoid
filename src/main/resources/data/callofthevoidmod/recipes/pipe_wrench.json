@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "##",
+    "#R",
+    "# "
+  ],
+  "key":{
+    "#": {
+      "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "minecraft:red_dye"
+    }
+  },
+  "result": {
+    "item": "callofthevoidmod:pipe_wrench"
+  }
+}

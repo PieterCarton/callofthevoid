@@ -12,8 +12,19 @@
               "source": "block_entity",
               "ops": [
                 {
-                  "source": "essence",
-                  "target": "BlockEntityTag.essence",
+                  "source": "compartments",
+                  "target": "BlockEntityTag.compartments",
+                  "op": "replace"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "charge",
+                  "target": "BlockEntityTag.charge",
                   "op": "replace"
                 }
               ]
