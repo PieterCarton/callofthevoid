@@ -1,3 +1,12 @@
+Quick Todo:
+make tubing work
+maybe rework essence to be fluid?
+look at capabilities
+fun function item (magnet, tool, etc)
+
+Scraper:
+    tool to get bedrock shavings,
+
 Entropic Battery: gain charge when broken (amount depends on tier) OR passive gain in void
 			-Multiple tiers with different capacities
 			-Early game power gen
@@ -25,4 +34,3 @@ Chunk based energy/essence levels:
 Advancements:
 -Rapid Unscheduled Disassembly
 -Percussive Maintenance
--Yes, it needs to be red

@@ -28,6 +28,10 @@ public class EssenceUtils {
         ListNBT listNBT = (ListNBT) compound.get("compartments");
         Map<EssenceType, EssenceCompartment> compartmentMap = new HashMap<>();
 
+        if (listNBT == null) {
+            return compartmentMap;
+        }
+
         for (int i = 0; i < listNBT.size(); i++) {
             CompoundNBT compoundNBT = listNBT.getCompound(i);
             String typeString = compoundNBT.getString("essenceType");

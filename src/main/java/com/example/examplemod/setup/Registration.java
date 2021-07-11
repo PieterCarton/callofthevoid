@@ -1,6 +1,7 @@
 package com.example.examplemod.setup;
 
 import com.example.examplemod.CallOfTheVoidMod;
+import com.example.examplemod.network.ModPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftGame;
 import net.minecraft.client.gui.ScreenManager;
@@ -36,7 +37,7 @@ public class Registration {
         ITEMS.register(modEventBus);
         CONTAINERS.register(modEventBus);
         TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
-
+        ModPacketHandler.registerPackets();
 
         ModSounds.init();
         ModItems.register();

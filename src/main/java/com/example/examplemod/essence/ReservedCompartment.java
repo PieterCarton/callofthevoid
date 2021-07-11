@@ -2,8 +2,6 @@ package com.example.examplemod.essence;
 
 import net.minecraft.nbt.CompoundNBT;
 
-import java.util.Objects;
-
 public class ReservedCompartment extends EssenceCompartment{
 
     private int stored = 0;

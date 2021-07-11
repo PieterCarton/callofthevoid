@@ -17,10 +17,11 @@ public class BatteryBlockTileEntity extends TileEntity implements IPushStorage, 
 
     public BatteryBlockTileEntity(TileEntityType<?> type) {
         super(type);
+        storage = new MultiEssenceStorage(0,0);
     }
 
     public BatteryBlockTileEntity() {
-        super(ModTileEntityTypes.BATTERY.get());
+        this(EssenceType.ORDER, 0, 0);
     }
 
     public BatteryBlockTileEntity(EssenceType type, int maxEssence, int maxOutput) {

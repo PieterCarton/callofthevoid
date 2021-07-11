@@ -1,38 +1,29 @@
 package com.example.examplemod.inventory;
 
-import com.example.examplemod.screen.ReassemblerScreen;
+import com.example.examplemod.essence.MultiEssenceStorage;
 import com.example.examplemod.setup.ModContainerTypes;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class ReassemblerContainer extends EssenceStorageContainer {
     private final IInventory inventory;
     private final IIntArray reassemblerData;
 
     public ReassemblerContainer(int id, PlayerInventory playerInventory){
-        this(id, playerInventory, new Inventory(1), new IntArray(4));
+        this(id, playerInventory, new Inventory(1), new IntArray(4), new MultiEssenceStorage(0, 0));
     }
 
 
-    public ReassemblerContainer(int id, PlayerInventory playerInventory, IInventory blockInventory, IIntArray reassemblerData) {
-        super(ModContainerTypes.REASSEMBLER.get(), id);
+    public ReassemblerContainer(int id, PlayerInventory playerInventory, IInventory blockInventory, IIntArray reassemblerData, MultiEssenceStorage storage) {
+        super(ModContainerTypes.REASSEMBLER.get(), id, playerInventory, storage);
         //set default state later
         this.inventory = blockInventory;
         this.reassemblerData = reassemblerData;

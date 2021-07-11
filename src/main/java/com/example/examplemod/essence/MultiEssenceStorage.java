@@ -1,6 +1,9 @@
 package com.example.examplemod.essence;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -26,8 +29,8 @@ public class MultiEssenceStorage implements IEssenceStorage {
     }
 
     public void read(CompoundNBT nbt) {
-        maxInput = nbt.getByte("maxInput");
-        maxOutput = nbt.getByte("maxOutput");
+        maxInput = nbt.getInt("maxInput");
+        maxOutput = nbt.getInt("maxOutput");
         compartments = EssenceUtils.readEssenceCompartments(nbt);
     }
 
@@ -100,5 +103,10 @@ public class MultiEssenceStorage implements IEssenceStorage {
         return maxInput == that.maxInput &&
                 maxOutput == that.maxOutput &&
                 Objects.equals(compartments, that.compartments);
+    }
+
+    @Override
+    public String toString() {
+        return this.write(new CompoundNBT()).toString();
     }
 }

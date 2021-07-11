@@ -5,9 +5,14 @@ import com.example.examplemod.essence.EssenceQuantity;
 import com.example.examplemod.essence.EssenceType;
 import com.example.examplemod.essence.IEssenceStorage;
 import com.example.examplemod.inventory.ReassemblerContainer;
+import com.example.examplemod.network.EssenceSyncPacket;
+import com.example.examplemod.network.ModPacketHandler;
 import com.example.examplemod.setup.ModTileEntityTypes;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
@@ -19,6 +24,7 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 public class ReassemblerTileEntity extends LockableLootTileEntity implements ITickableTileEntity, IEssenceStorage {
     private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
@@ -61,17 +67,18 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
 
     public ReassemblerTileEntity(){
         super(ModTileEntityTypes.REASSEMBLER.get());
-        storage = new MultiEssenceStorage(1000, 0);
-        storage.addCompartment(EssenceType.ORDER, 1000);
+        initializeStorage();
     }
 
     public ReassemblerTileEntity(TileEntityType type){
         super(type);
+        initializeStorage();
     }
 
     @Override
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
+
         storage.read(nbt);
         this.items = NonNullList.withSize(1, ItemStack.EMPTY);
         this.repairTime = nbt.getInt("repairTime");
@@ -121,7 +128,12 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
 
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
-        return new ReassemblerContainer(id, player, this, reassemblerData);
+
+        PlayerEntity playerEntity = player.player;
+        if (playerEntity instanceof ServerPlayerEntity) {
+            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
+        }
+        return new ReassemblerContainer(id, player, this, reassemblerData, storage);
     }
 
     @Override
@@ -177,5 +189,10 @@ public class ReassemblerTileEntity extends LockableLootTileEntity implements ITi
     @Override
     public boolean canExtractEssence(EssenceType type) {
         return storage.canExtractEssence(type);
+    }
+
+    private void initializeStorage() {
+        storage = new MultiEssenceStorage(1000, 0);
+        storage.addCompartment(EssenceType.ORDER, 1000);
     }
 }

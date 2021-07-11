@@ -40,8 +40,6 @@ public class ReassemblerBlock extends ContainerBlock {
             TileEntity tileEntity = worldIn.getTileEntity(pos);
 
             if(tileEntity instanceof ReassemblerTileEntity){
-                //check if tile entity works for now
-                System.out.println("clicked");
                 player.openContainer((ReassemblerTileEntity)tileEntity);
             }
 
