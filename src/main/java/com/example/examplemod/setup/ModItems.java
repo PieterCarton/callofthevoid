@@ -1,18 +1,16 @@
 package com.example.examplemod.setup;
 
-import com.example.examplemod.CallOfTheVoidMod;
 import com.example.examplemod.item.BatteryBlockItem;
 import com.example.examplemod.item.EssenceAnalyserItem;
+import com.example.examplemod.item.PipeWrenchItem;
 import com.example.examplemod.itemgroup.ModItemGroups;
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemTier;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.item.Rarity;
-import net.minecraft.util.SoundEvents;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.HashSet;
 
 public class ModItems {
     public static final RegistryObject<Item> CUSTOM_INGOT = Registration.ITEMS.register("custom_ingot", () ->
@@ -31,7 +29,7 @@ public class ModItems {
             new EssenceAnalyserItem(new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID).maxStackSize(1)));
 
     public static final RegistryObject<Item> PIPE_WRENCH_ITEM = Registration.ITEMS.register("pipe_wrench", () ->
-            new Item(new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID).maxStackSize(1).maxDamage(4)));
+            new PipeWrenchItem(5.0f, 0.8f, ItemTier.IRON, new HashSet<>(), new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID).maxStackSize(1)));
 
     public static final RegistryObject<Item> MUSIC_DISK_BACKSEAT = Registration.ITEMS.register("music_disk_backseat", () ->
             new MusicDiscItem(12, ModSounds.MUSIC_DISK_BACKSEAT, new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID).maxStackSize(1).rarity(Rarity.RARE)));

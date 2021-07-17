@@ -1,4 +1,10 @@
 Quick Todo:
+Walking cane, sword cane
+    increased walk speed (walk only)
+    lessen effect of shallow water, soul sand, slime, etc
+    unsheathe to get sword-like weapon
+    out of sheathe attack for heavy damage at high attack disable
+
 make tubing work
 maybe rework essence to be fluid?
 look at capabilities
