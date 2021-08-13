@@ -4,6 +4,7 @@ Walking cane, sword cane
     lessen effect of shallow water, soul sand, slime, etc
     unsheathe to get sword-like weapon
     out of sheathe attack for heavy damage at high attack disable
+    TODO: map sword cane texture more unique
 
 make tubing work
 maybe rework essence to be fluid?

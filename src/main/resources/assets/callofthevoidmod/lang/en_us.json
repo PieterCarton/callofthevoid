@@ -16,5 +16,9 @@
   "item.callofthevoidmod.music_disk_backseat.desc": "Backseat",
   "item.callofthevoidmod.order_essence": "Order Essence",
   "item.callofthevoidmod.pipe_wrench": "Pipe Wrench",
+  "item.callofthevoidmod.walking_cane": "Walking Cane",
+  "item.callofthevoidmod.sword_cane": "Sword Cane",
+  "item.callofthevoidmod.sheathed_sword_cane": "Sheathed Sword Cane",
+  "item.callofthevoidmod.sword_cane_sheath": "Sword Cane Sheath",
   "itemGroup.Call of the Void": "Call of the Void"
 }
