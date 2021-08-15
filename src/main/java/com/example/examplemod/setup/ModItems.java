@@ -26,6 +26,7 @@ public class ModItems {
     public static final RegistryObject<Item> ESSENCE_ANALYSER_ITEM = Registration.ITEMS.register("essence_analyser", () ->
             new EssenceAnalyserItem(new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID).maxStackSize(1)));
 
+    //TODO fix stats
     public static final RegistryObject<Item> PIPE_WRENCH_ITEM = Registration.ITEMS.register("pipe_wrench", () ->
             new PipeWrenchItem(5.0f, 0.8f, ItemTier.IRON, new HashSet<>(), new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID).maxStackSize(1)));
 
@@ -35,6 +36,7 @@ public class ModItems {
     public static final RegistryObject<Item> SHEATHED_SWORD_CANE_ITEM = Registration.ITEMS.register("sheathed_sword_cane", () ->
             new SheathedSwordCaneItem(new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID).maxStackSize(1)));
 
+    //TODO fix stats
     public static final RegistryObject<Item> SWORD_CANE_ITEM = Registration.ITEMS.register("sword_cane", () ->
             new SwordCaneItem(5.0f, 0.8f, ItemTier.IRON, new HashSet<>(),new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID).maxStackSize(1)));
 
