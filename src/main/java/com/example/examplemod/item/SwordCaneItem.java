@@ -28,10 +28,6 @@ public class SwordCaneItem extends ToolItem {
         Item sheathItem = ModItems.SWORD_CANE_SHEATH_ITEM.get();
         Item offhandItem = playerIn.getHeldItem(Hand.OFF_HAND).getItem();
 
-        System.out.println(playerIn.isCrouching() );
-        System.out.println(handIn.equals(Hand.MAIN_HAND));
-        System.out.println(playerIn.getHeldItem(Hand.OFF_HAND).equals(sheathItem));
-
         if (playerIn.isCrouching() && handIn.equals(Hand.MAIN_HAND) && offhandItem.equals(sheathItem)) {
             //TODO: Replace sound
             worldIn.playSound(playerIn, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(),
