@@ -7,10 +7,10 @@
   ],
   "key":{
     "#": {
-      "item": "minecraft:iron_ingot"
+      "tag": "forge:ingots/iron"
     },
     "R": {
-      "item": "minecraft:red_dye"
+      "tag": "forge:dyes/red"
     }
   },
   "result": {

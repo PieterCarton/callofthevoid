@@ -13,10 +13,12 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class CaneItem extends Item {
     private static final AttributeModifier WALK_SPEED_BOOST = new AttributeModifier("Cane speed boost", 0.016, AttributeModifier.Operation.ADDITION);
+
     public CaneItem(Properties properties) {
         super(properties);
     }
@@ -28,32 +30,47 @@ public class CaneItem extends Item {
             return;
         }
 
-
         if (entityIn instanceof LivingEntity) {
             LivingEntity entity = (LivingEntity) entityIn;
             ModifiableAttributeInstance attributeInstance = entity.getAttribute(Attributes.MOVEMENT_SPEED);
 
-            if (attributeInstance.hasModifier(WALK_SPEED_BOOST)) {
+            //remove modifier if necessary
+            if (attributeInstance.hasModifier(WALK_SPEED_BOOST) && (!isHoldingWalkingCane(entityIn) || entity.isSprinting() || entity.isCrouching())) {
                 attributeInstance.removeModifier(WALK_SPEED_BOOST);
-            }
-
-            if (!isSelected) {
                 return;
             }
 
-            if (!entity.isSprinting() && !entity.isCrouching()) {
+            //otherwise, add modifier if not yet present
+            if (isSelected && !attributeInstance.hasModifier(WALK_SPEED_BOOST)) {
                 //server or client side?
                 attributeInstance.applyNonPersistentModifier(WALK_SPEED_BOOST);
             }
         }
-
-        /*
-        if (entityIn.isLiving() ) {
-            LivingEntity entity = (LivingEntity) entityIn;
-            if (entity.isInWater() && !entity.isActualySwimming()) {
-                entity.addPotionEffect(new EffectInstance(Effects.SPEED, 1, 2));
-            }
-        }
-         */
     }
+
+    @Override
+    public boolean onDroppedByPlayer(ItemStack item, PlayerEntity player) {
+        if (player.world.isRemote) {
+            return true;
+        }
+
+        ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (attributeInstance.hasModifier(WALK_SPEED_BOOST)) {
+            attributeInstance.removeModifier(WALK_SPEED_BOOST);
+        }
+        return true;
+    }
+
+
+
+    private static boolean isHoldingWalkingCane(Entity entity) {
+        if (entity instanceof LivingEntity) {
+            LivingEntity livingEntity = (LivingEntity) entity;
+            Item mainHandItem = livingEntity.getHeldItem(Hand.MAIN_HAND).getItem();
+            Item offHandItem = livingEntity.getHeldItem(Hand.OFF_HAND).getItem();
+            return offHandItem instanceof CaneItem || mainHandItem instanceof CaneItem;
+        }
+        return false;
+    }
+
 }
