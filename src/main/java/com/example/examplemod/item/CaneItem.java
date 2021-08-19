@@ -17,7 +17,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class CaneItem extends Item {
-    private static final AttributeModifier WALK_SPEED_BOOST = new AttributeModifier("Cane speed boost", 0.016, AttributeModifier.Operation.ADDITION);
+    private static final AttributeModifier WALK_SPEED_BOOST = new AttributeModifier("Cane speed boost", 0.018, AttributeModifier.Operation.ADDITION);
 
     public CaneItem(Properties properties) {
         super(properties);
