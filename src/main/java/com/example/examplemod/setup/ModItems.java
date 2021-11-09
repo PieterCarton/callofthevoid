@@ -2,10 +2,7 @@ package com.example.examplemod.setup;
 
 import com.example.examplemod.item.*;
 import com.example.examplemod.itemgroup.ModItemGroups;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemTier;
-import net.minecraft.item.MusicDiscItem;
-import net.minecraft.item.Rarity;
+import net.minecraft.item.*;
 import net.minecraftforge.fml.RegistryObject;
 
 import java.util.HashSet;
@@ -45,6 +42,12 @@ public class ModItems {
 
     public static final RegistryObject<Item> MUSIC_DISK_BACKSEAT = Registration.ITEMS.register("music_disk_backseat", () ->
             new MusicDiscItem(12, ModSounds.MUSIC_DISK_BACKSEAT, new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID).maxStackSize(1).rarity(Rarity.RARE)));
+
+    public static final RegistryObject<Item> KATANA_ITEM = Registration.ITEMS.register("katana", () ->
+            new SwordItem(ItemTier.IRON, 10, 5.0f, new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID).maxStackSize(1)));
+
+    public static final RegistryObject<Item> CLIMBING_PICK_ITEM = Registration.ITEMS.register("climbing_pick", () ->
+            new ClimbingPickItem(ItemTier.IRON, 4, 2.0f, new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID)));
 
     static void register(){}
 }

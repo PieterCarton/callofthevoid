@@ -1,15 +1,27 @@
-Quick Todo:
-Walking cane, sword cane
-    increased walk speed (walk only)
-    lessen effect of shallow water, soul sand, slime, etc
-    unsheathe to get sword-like weapon
-    out of sheathe attack for heavy damage at high attack disable
-    TODO: map sword cane texture more unique
+Call of the Depths(/Deep/Below)
 
+finish climbing pick(max jumps, sound queue for how many jumps left, more tiers, unique enchantments)
+Implement more caving/mining utitility items:
+Portable Light sources
+	Lantern
+	Helmet with light
+Very Basic Backpack (in some different tiers)
+MLG Bucket Totem
+Portable/easy to place ladders
+
+Worldgen
+caving base camp
+
+Mobs
+Crawler (can walk on ceilings, tries to drop on player) -> drop for crafting climbing pick
+Stalker (Can only survive in total darkness, hard to kill without light)
+
+---------------------------------------
+Call Of the Void (On Hold)
+egg incubator
 make tubing work
 maybe rework essence to be fluid?
 look at capabilities
-fun function item (magnet, tool, etc)
 
 Scraper:
     tool to get bedrock shavings,
