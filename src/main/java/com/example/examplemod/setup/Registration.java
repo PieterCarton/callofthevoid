@@ -1,16 +1,27 @@
 package com.example.examplemod.setup;
 
 import com.example.examplemod.CallOfTheVoidMod;
+import com.example.examplemod.capability.ModCapabilities;
+import com.example.examplemod.capability.climbing.CapabilityClimbing;
+import com.example.examplemod.capability.climbing.ClimbingHandler;
 import com.example.examplemod.network.ModPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftGame;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,7 +31,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class Registration {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, CallOfTheVoidMod.MOD_ID);
@@ -45,6 +57,11 @@ public class Registration {
         ModContainerTypes.register();
     }
 
+    @SubscribeEvent
+    public static void registerCapabilities(FMLCommonSetupEvent evt) {
+        ModCapabilities.register();
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> evt){
         ModTileEntityTypes.register();
@@ -55,4 +72,24 @@ public class Registration {
         //ModTileEntityTypes.register();
         ModScreens.init();
     }
+
+    /*
+    @SubscribeEvent
+    public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> evt) {
+        System.out.println("attachin capabilities");
+        if (evt.getObject() instanceof PlayerEntity) {
+            ClimbingHandler instance = new ClimbingHandler();
+            evt.addCapability(CapabilityClimbing.CLIMBING_HANDLER_CAPABILITY_NAME,
+                    new ICapabilityProvider() {
+                        @Nonnull
+                        @Override
+                        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+                            if (cap == CapabilityClimbing.CLIMBING_HANDLER_CAPABILITY)
+                                return LazyOptional.of(() -> instance).cast();
+                            return LazyOptional.empty();
+                        }
+                    });
+        }
+    }
+    */
 }

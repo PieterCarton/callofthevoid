@@ -23,6 +23,8 @@ public class CaneItem extends Item {
         super(properties);
     }
 
+
+    // refactor into getAttributeModifiers
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);

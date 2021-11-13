@@ -1,5 +1,6 @@
 package com.example.examplemod;
 
+import com.example.examplemod.event.CapabilityEventHandler;
 import com.example.examplemod.setup.ModItems;
 import com.example.examplemod.setup.ModSounds;
 import com.example.examplemod.setup.Registration;
@@ -31,6 +32,7 @@ public class CallOfTheVoidMod
 
     public CallOfTheVoidMod() {
         Registration.register();
+        registerEventHandlers();
 
         FMLJavaModLoadingContext.get().getModEventBus().register(Registration.class);
         // Register the setup method for modloading
@@ -89,5 +91,9 @@ public class CallOfTheVoidMod
             // register a new block here
             LOGGER.info("HELLO from Register Block");
         }
+    }
+
+    public static void registerEventHandlers() {
+        MinecraftForge.EVENT_BUS.register(CapabilityEventHandler.class);
     }
 }

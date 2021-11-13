@@ -1,5 +1,6 @@
 package com.example.examplemod.item;
 
+import com.example.examplemod.capability.climbing.ClimbingHandler;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.KeyboardListener;
 import net.minecraft.client.Minecraft;
@@ -34,11 +35,18 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.EventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 public class ClimbingPickItem extends PickaxeItem {
+
+    @CapabilityInject(ClimbingHandler.class)
+    private static Capability<ClimbingHandler> CLIMBING_HANDLER_CAPABILITY = null;
+
     final double CLING_DISTANCE = 0.1;
     final int USAGE_COOLDOWN = 5;
     int currentCooldown = 0;
@@ -49,11 +57,18 @@ public class ClimbingPickItem extends PickaxeItem {
         super(tier, attackDamageIn, attackSpeedIn, builder);
     }
 
+
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         //maybe should be capability?
         //if (!worldIn.isRemote) {
         // add toggle timer
+        LazyOptional<ClimbingHandler> capability = playerIn.getCapability(CLIMBING_HANDLER_CAPABILITY, null);
+        System.out.println(capability.isPresent());
+        capability.ifPresent(info -> System.out.println(info.getJumps()));
+        capability.ifPresent(info -> info.setJumps(info.getJumps() + 1));
+
+        System.out.println(CLIMBING_HANDLER_CAPABILITY == null);
         if (worldIn.isRemote() && currentCooldown < 0 && canClimbOnWall(playerIn)) {
             playerIn.setNoGravity(!playerIn.hasNoGravity());
             playerIn.setMotion(Vector3d.ZERO);
@@ -69,13 +84,11 @@ public class ClimbingPickItem extends PickaxeItem {
             // reset jumps
         }
 
-        if (entityIn.hasNoGravity() && worldIn.isRemote()) {
+        if (entityIn.hasNoGravity() && worldIn.isRemote() && entityIn instanceof PlayerEntity) {
             if (Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
                 entityIn.setNoGravity(false);
-                if (entityIn instanceof PlayerEntity) {
-                    PlayerEntity player = (PlayerEntity) entityIn;
-                    player.jump();
-                }
+                PlayerEntity player = (PlayerEntity) entityIn;
+                player.jump();
             } else if (entityIn.getMotion().getX() != 0.0 && entityIn.getMotion().getZ() != 0.0) {
                 entityIn.setNoGravity(false);
             }
