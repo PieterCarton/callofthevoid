@@ -1,11 +1,16 @@
 package com.example.examplemod.network;
 
 import com.example.examplemod.CallOfTheVoidMod;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
+import java.security.Provider;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class ModPacketHandler {
 
@@ -23,5 +28,11 @@ public class ModPacketHandler {
                 (pkt, buffer) -> EssenceSyncPacket.encode(pkt, buffer),
                 buffer -> EssenceSyncPacket.decode(buffer),
                 (pkt, ctx) -> EssenceSyncPacket.handle(pkt, ctx));
+
+        register(ClimbingCapabilitySyncPacket.class, ClimbingCapabilitySyncPacket::new);
+    }
+
+    public static <MSG extends IModPacket> void register(Class<MSG> messageType, Function<PacketBuffer, MSG> decoder) {
+        INSTANCE.registerMessage(id++, messageType, (pkt, buffer) -> pkt.serialize(buffer), decoder, (pkt, ctx) -> pkt.handle(ctx));
     }
 }
