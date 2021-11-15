@@ -1,6 +1,8 @@
 package com.example.examplemod;
 
+import com.example.examplemod.capability.ModCapabilities;
 import com.example.examplemod.event.CapabilityEventHandler;
+import com.example.examplemod.event.EntityJumpHandler;
 import com.example.examplemod.setup.ModItems;
 import com.example.examplemod.setup.ModSounds;
 import com.example.examplemod.setup.Registration;
@@ -95,5 +97,7 @@ public class CallOfTheVoidMod
 
     public static void registerEventHandlers() {
         MinecraftForge.EVENT_BUS.register(CapabilityEventHandler.class);
+        MinecraftForge.EVENT_BUS.register(ModCapabilities.class);
+        MinecraftForge.EVENT_BUS.register(EntityJumpHandler.class);
     }
 }

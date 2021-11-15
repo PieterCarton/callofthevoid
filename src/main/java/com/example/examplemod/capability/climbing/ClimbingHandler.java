@@ -1,5 +1,8 @@
 package com.example.examplemod.capability.climbing;
 
+import com.example.examplemod.network.ClimbingCapabilitySyncPacket;
+import com.example.examplemod.network.ModPacketHandler;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -7,6 +10,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
@@ -28,8 +32,11 @@ public class ClimbingHandler {
         return jumps;
     }
 
-    public void setJumps(int jumps) {
-        this.jumps = jumps;
+    /**
+     * Increase jumps made by player while climbing by one
+     */
+    public void incJumps() {
+        this.jumps++;
     }
 
     public void readFromNBT(CompoundNBT nbt) {
@@ -38,13 +45,13 @@ public class ClimbingHandler {
     }
 
     public CompoundNBT writeToNBT(CompoundNBT nbt) {
-        System.out.println("Writing Capability To nbt");
-        System.out.println(jumps);
-        System.out.println(stableHeight);
         nbt.putInt("Jumps", jumps);
         nbt.putDouble("Stable Height", stableHeight);
-        System.out.println(nbt.getInt("Jumps"));
-        System.out.println(nbt.getDouble("Stable Height"));
         return nbt;
+    }
+
+    public void sendPacketToPlayer(ServerPlayerEntity player) {
+        ClimbingCapabilitySyncPacket packet = new ClimbingCapabilitySyncPacket(writeToNBT(new CompoundNBT()));
+        ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), packet);
     }
 }

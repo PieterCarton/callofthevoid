@@ -46,12 +46,11 @@ public class ClimbingPickItem extends PickaxeItem {
 
     @CapabilityInject(ClimbingHandler.class)
     private static Capability<ClimbingHandler> CLIMBING_HANDLER_CAPABILITY = null;
+    private LazyOptional<ClimbingHandler> climbingHandlerLazyOptional;
 
     final double CLING_DISTANCE = 0.1;
     final int USAGE_COOLDOWN = 5;
     int currentCooldown = 0;
-
-    private static DataParameter<Boolean> HANGING_FROM_WALL = EntityDataManager.createKey(PlayerEntity.class, DataSerializers.BOOLEAN);
 
     public ClimbingPickItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Properties builder) {
         super(tier, attackDamageIn, attackSpeedIn, builder);
@@ -63,12 +62,6 @@ public class ClimbingPickItem extends PickaxeItem {
         //maybe should be capability?
         //if (!worldIn.isRemote) {
         // add toggle timer
-        LazyOptional<ClimbingHandler> capability = playerIn.getCapability(CLIMBING_HANDLER_CAPABILITY, null);
-        System.out.println(capability.isPresent());
-        capability.ifPresent(info -> System.out.println(info.getJumps()));
-        capability.ifPresent(info -> info.setJumps(info.getJumps() + 1));
-
-        System.out.println(CLIMBING_HANDLER_CAPABILITY == null);
         if (worldIn.isRemote() && currentCooldown < 0 && canClimbOnWall(playerIn)) {
             playerIn.setNoGravity(!playerIn.hasNoGravity());
             playerIn.setMotion(Vector3d.ZERO);
@@ -78,6 +71,9 @@ public class ClimbingPickItem extends PickaxeItem {
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
+    // should ultimately be handled server side, both for security and to ensure correct function when rejoining
+
+
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (entityIn.isOnGround()) {
@@ -86,6 +82,13 @@ public class ClimbingPickItem extends PickaxeItem {
 
         if (entityIn.hasNoGravity() && worldIn.isRemote() && entityIn instanceof PlayerEntity) {
             if (Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
+                if (climbingHandlerLazyOptional == null) {
+                    climbingHandlerLazyOptional = entityIn.getCapability(CLIMBING_HANDLER_CAPABILITY);
+                }
+
+                climbingHandlerLazyOptional.ifPresent(cap -> cap.incJumps());
+                climbingHandlerLazyOptional.ifPresent(cap -> System.out.println(cap.getJumps()));
+
                 entityIn.setNoGravity(false);
                 PlayerEntity player = (PlayerEntity) entityIn;
                 player.jump();
@@ -106,6 +109,7 @@ public class ClimbingPickItem extends PickaxeItem {
         Direction lookDirection = getLookDirection(player.getLookVec());
         Vector3i lookDirectionVec = lookDirection.getDirectionVec();
 
+        // track block in some way
         BlockPos upperLookBlockPos = player.getPosition().add(lookDirection.getDirectionVec());
         BlockPos lowerLookBlockPos = upperLookBlockPos.add(Direction.DOWN.getDirectionVec());
 
