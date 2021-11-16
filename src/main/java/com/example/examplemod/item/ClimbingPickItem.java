@@ -1,46 +1,25 @@
 package com.example.examplemod.item;
 
 import com.example.examplemod.capability.climbing.ClimbingHandler;
-import net.minecraft.client.GameSettings;
-import net.minecraft.client.KeyboardListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.PickaxeItem;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.client.CInputPacket;
-import net.minecraft.network.play.server.SEntityMetadataPacket;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.eventbus.EventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 public class ClimbingPickItem extends PickaxeItem {
 
@@ -87,10 +66,15 @@ public class ClimbingPickItem extends PickaxeItem {
                 }
 
                 climbingHandlerLazyOptional.ifPresent(cap -> cap.incJumps());
-                climbingHandlerLazyOptional.ifPresent(cap -> System.out.println(cap.getJumps()));
+                //climbingHandlerLazyOptional.ifPresent(cap -> System.out.println(cap.getJumps()));
 
                 entityIn.setNoGravity(false);
                 PlayerEntity player = (PlayerEntity) entityIn;
+                System.out.println("instance of ClientPlayerEntity??");
+                if (player instanceof ClientPlayerEntity) {
+                    System.out.println("yessssss");
+                    ((ClientPlayerEntity) player).movementInput.jump = true;
+                }
                 player.jump();
             } else if (entityIn.getMotion().getX() != 0.0 && entityIn.getMotion().getZ() != 0.0) {
                 entityIn.setNoGravity(false);
@@ -142,5 +126,21 @@ public class ClimbingPickItem extends PickaxeItem {
                 return Direction.NORTH;
             }
         }
+    }
+
+    public void onLeap() {
+        // if on client, handle movement
+
+        // if on server, switch gravity on and update capability
+    }
+
+    public void onAttach() {
+        // if on client, handle movement
+
+        // if on server, switch gravity off and update capability
+    }
+
+    public void onRelease() {
+        // switch gravity on and update capability
     }
 }

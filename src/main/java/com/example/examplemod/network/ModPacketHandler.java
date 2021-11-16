@@ -30,6 +30,7 @@ public class ModPacketHandler {
                 (pkt, ctx) -> EssenceSyncPacket.handle(pkt, ctx));
 
         register(ClimbingCapabilitySyncPacket.class, ClimbingCapabilitySyncPacket::new);
+        register(CClimbingActionPacket.class, CClimbingActionPacket::new);
     }
 
     public static <MSG extends IModPacket> void register(Class<MSG> messageType, Function<PacketBuffer, MSG> decoder) {
