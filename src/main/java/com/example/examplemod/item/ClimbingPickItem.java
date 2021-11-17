@@ -1,6 +1,8 @@
 package com.example.examplemod.item;
 
 import com.example.examplemod.capability.climbing.ClimbingHandler;
+import com.example.examplemod.network.CClimbingActionPacket;
+import com.example.examplemod.network.ModPacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -38,13 +40,14 @@ public class ClimbingPickItem extends PickaxeItem {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        //maybe should be capability?
-        //if (!worldIn.isRemote) {
-        // add toggle timer
+
         if (worldIn.isRemote() && currentCooldown < 0 && canClimbOnWall(playerIn)) {
-            playerIn.setNoGravity(!playerIn.hasNoGravity());
-            playerIn.setMotion(Vector3d.ZERO);
             currentCooldown = USAGE_COOLDOWN;
+            if (playerIn.hasNoGravity() == true) {
+                onRelease(playerIn);
+            } else {
+                onAttach(playerIn);
+            }
         }
 
         return super.onItemRightClick(worldIn, playerIn, handIn);
@@ -60,24 +63,11 @@ public class ClimbingPickItem extends PickaxeItem {
         }
 
         if (entityIn.hasNoGravity() && worldIn.isRemote() && entityIn instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) entityIn;
             if (Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
-                if (climbingHandlerLazyOptional == null) {
-                    climbingHandlerLazyOptional = entityIn.getCapability(CLIMBING_HANDLER_CAPABILITY);
-                }
-
-                climbingHandlerLazyOptional.ifPresent(cap -> cap.incJumps());
-                //climbingHandlerLazyOptional.ifPresent(cap -> System.out.println(cap.getJumps()));
-
-                entityIn.setNoGravity(false);
-                PlayerEntity player = (PlayerEntity) entityIn;
-                System.out.println("instance of ClientPlayerEntity??");
-                if (player instanceof ClientPlayerEntity) {
-                    System.out.println("yessssss");
-                    ((ClientPlayerEntity) player).movementInput.jump = true;
-                }
-                player.jump();
+                onLeap(player);
             } else if (entityIn.getMotion().getX() != 0.0 && entityIn.getMotion().getZ() != 0.0) {
-                entityIn.setNoGravity(false);
+                onRelease(player);
             }
         }
         currentCooldown--;
@@ -128,19 +118,41 @@ public class ClimbingPickItem extends PickaxeItem {
         }
     }
 
-    public void onLeap() {
-        // if on client, handle movement
+    public void onLeap(PlayerEntity player) {
+        // switch gravity on
+        player.setNoGravity(false);
 
-        // if on server, switch gravity on and update capability
+        //update capability
+        LazyOptional<ClimbingHandler> climbingCapability = player.getCapability(CLIMBING_HANDLER_CAPABILITY);
+        climbingCapability.ifPresent(cap -> cap.incJumps());
+
+        if (player.world.isRemote) {
+            // if on client, handle movement and inform server of action
+            player.jump();
+            ModPacketHandler.INSTANCE.sendToServer(new CClimbingActionPacket(CClimbingActionPacket.ClimbingAction.LEAP, player.getPosY()));
+        }
     }
 
-    public void onAttach() {
-        // if on client, handle movement
+    public void onAttach(PlayerEntity player) {
+        // switch gravity off and update capability
+        player.setNoGravity(true);
 
-        // if on server, switch gravity off and update capability
+        if (player.world.isRemote) {
+            // if on client, handle movement and inform server of action
+            player.setMotion(Vector3d.ZERO);
+            ModPacketHandler.INSTANCE.sendToServer(new CClimbingActionPacket(CClimbingActionPacket.ClimbingAction.ATTACH, player.getPosY()));
+        }
+
+
     }
 
-    public void onRelease() {
-        // switch gravity on and update capability
+    public void onRelease(PlayerEntity player) {
+        // switch gravity on
+        player.setNoGravity(false);
+
+        if (player.world.isRemote) {
+            // if on client, inform server of action
+            ModPacketHandler.INSTANCE.sendToServer(new CClimbingActionPacket(CClimbingActionPacket.ClimbingAction.RELEASE, player.getPosY()));
+        }
     }
 }

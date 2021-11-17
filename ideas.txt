@@ -8,6 +8,7 @@ Portable Light sources
 Very Basic Backpack (in some different tiers)
 MLG Bucket Totem
 Portable/easy to place ladders
+Machete (sword with better break speed of foliage/spider webs, etc)
 
 Worldgen
 caving base camp

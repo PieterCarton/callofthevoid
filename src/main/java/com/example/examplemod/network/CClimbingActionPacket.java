@@ -2,11 +2,12 @@ package com.example.examplemod.network;
 
 import com.example.examplemod.item.ClimbingPickItem;
 import com.example.examplemod.setup.ModItems;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class CClimbingActionPacket extends ClientToServerPacket {
-    enum ClimbingAction{
+    public enum ClimbingAction{
         ATTACH,
         RELEASE,
         LEAP
@@ -28,15 +29,16 @@ public class CClimbingActionPacket extends ClientToServerPacket {
     @Override
     public void handleServerside(NetworkEvent.Context ctx) {
         ClimbingPickItem climbingPick = (ClimbingPickItem) ModItems.CLIMBING_PICK_ITEM.get();
+        PlayerEntity player = ctx.getSender();
         switch (action){
             case LEAP:
-                climbingPick.onLeap();
+                climbingPick.onLeap(player);
                 break;
             case ATTACH:
-                climbingPick.onAttach();
+                climbingPick.onAttach(player);
                 break;
             case RELEASE:
-                climbingPick.onRelease();
+                climbingPick.onRelease(player);
         }
     }
 
