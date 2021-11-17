@@ -4,7 +4,6 @@ import com.example.examplemod.capability.climbing.ClimbingHandler;
 import com.example.examplemod.network.CClimbingActionPacket;
 import com.example.examplemod.network.ModPacketHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemTier;
@@ -27,7 +26,6 @@ public class ClimbingPickItem extends PickaxeItem {
 
     @CapabilityInject(ClimbingHandler.class)
     private static Capability<ClimbingHandler> CLIMBING_HANDLER_CAPABILITY = null;
-    private LazyOptional<ClimbingHandler> climbingHandlerLazyOptional;
 
     final double CLING_DISTANCE = 0.1;
     final int USAGE_COOLDOWN = 5;
@@ -46,6 +44,7 @@ public class ClimbingPickItem extends PickaxeItem {
             if (playerIn.hasNoGravity() == true) {
                 onRelease(playerIn);
             } else {
+                playerIn.swingArm(handIn);
                 onAttach(playerIn);
             }
         }
@@ -53,20 +52,14 @@ public class ClimbingPickItem extends PickaxeItem {
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
-    // should ultimately be handled server side, both for security and to ensure correct function when rejoining
-
-
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        if (entityIn.isOnGround()) {
-            // reset jumps
-        }
-
+        
         if (entityIn.hasNoGravity() && worldIn.isRemote() && entityIn instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entityIn;
             if (Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
                 onLeap(player);
-            } else if (entityIn.getMotion().getX() != 0.0 && entityIn.getMotion().getZ() != 0.0) {
+            } else if (entityIn.getMotion().getX() != 0.0 || entityIn.getMotion().getZ() != 0.0) {
                 onRelease(player);
             }
         }
@@ -125,6 +118,7 @@ public class ClimbingPickItem extends PickaxeItem {
         //update capability
         LazyOptional<ClimbingHandler> climbingCapability = player.getCapability(CLIMBING_HANDLER_CAPABILITY);
         climbingCapability.ifPresent(cap -> cap.incJumps());
+        climbingCapability.ifPresent(cap -> System.out.println(cap.getJumps()));
 
         if (player.world.isRemote) {
             // if on client, handle movement and inform server of action
@@ -136,6 +130,7 @@ public class ClimbingPickItem extends PickaxeItem {
     public void onAttach(PlayerEntity player) {
         // switch gravity off and update capability
         player.setNoGravity(true);
+        player.fallDistance = 0.0f;
 
         if (player.world.isRemote) {
             // if on client, handle movement and inform server of action
@@ -147,7 +142,6 @@ public class ClimbingPickItem extends PickaxeItem {
     }
 
     public void onRelease(PlayerEntity player) {
-        // switch gravity on
         player.setNoGravity(false);
 
         if (player.world.isRemote) {

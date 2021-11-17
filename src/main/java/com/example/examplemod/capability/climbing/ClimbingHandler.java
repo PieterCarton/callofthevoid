@@ -39,6 +39,11 @@ public class ClimbingHandler {
         this.jumps++;
     }
 
+    /**
+     * Set number of jumps to 0
+     */
+    public void resetJumps() {this.jumps = 0;};
+
     public void readFromNBT(CompoundNBT nbt) {
         jumps = nbt.getInt("Jumps");
         stableHeight = nbt.getDouble("Stable Height");
