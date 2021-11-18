@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 public class ClimbingHandler {
     private double stableHeight = Double.MAX_VALUE;
     private int jumps = 0;
+    private boolean isSliding = false;
 
     public ClimbingHandler() {}
 
@@ -30,6 +31,14 @@ public class ClimbingHandler {
 
     public int getJumps() {
         return jumps;
+    }
+
+    public boolean isSliding() {
+        return isSliding;
+    }
+
+    public void setSliding(boolean sliding) {
+        isSliding = sliding;
     }
 
     /**

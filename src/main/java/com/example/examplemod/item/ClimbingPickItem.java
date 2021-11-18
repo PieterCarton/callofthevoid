@@ -5,6 +5,7 @@ import com.example.examplemod.network.CClimbingActionPacket;
 import com.example.examplemod.network.ModPacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
@@ -27,6 +28,7 @@ public class ClimbingPickItem extends PickaxeItem {
     @CapabilityInject(ClimbingHandler.class)
     private static Capability<ClimbingHandler> CLIMBING_HANDLER_CAPABILITY = null;
 
+    private static final AttributeModifier SLIDE_FALL_SPEED_REDUCTION = new AttributeModifier("Slide fall-speed reduction", -0.06, AttributeModifier.Operation.ADDITION);
     final double CLING_DISTANCE = 0.1;
     final int USAGE_COOLDOWN = 5;
     int currentCooldown = 0;
@@ -54,7 +56,16 @@ public class ClimbingPickItem extends PickaxeItem {
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        
+        LazyOptional<ClimbingHandler> climbingCapability = entityIn.getCapability(CLIMBING_HANDLER_CAPABILITY);
+        ClimbingHandler cap = climbingCapability.orElse(new ClimbingHandler());
+
+        if (cap.isSliding()) {
+            System.out.println("----------------");
+            System.out.println("On server: " + worldIn.isRemote);
+            System.out.println("activate");
+            entityIn.fallDistance = 0.0f;
+        }
+
         if (entityIn.hasNoGravity() && worldIn.isRemote() && entityIn instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entityIn;
             if (Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
@@ -128,9 +139,38 @@ public class ClimbingPickItem extends PickaxeItem {
     }
 
     public void onAttach(PlayerEntity player) {
+        // check if player is still allowed to attach to wall
+        LazyOptional<ClimbingHandler> climbingCapability = player.getCapability(CLIMBING_HANDLER_CAPABILITY);
+        ClimbingHandler cap = climbingCapability.orElse(new ClimbingHandler());
+        if (cap.getJumps() >= 6) {
+            // should be start slide function
+            System.out.println("----------------");
+            System.out.println("On server: " + player.world.isRemote);
+            System.out.println("start sliding");
+            cap.setSliding(true);
+            player.setMotion(Vector3d.ZERO);
+            // check if sliding attribute already attached
+
+            if (!player.getAttribute(net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY.get()).hasModifier(SLIDE_FALL_SPEED_REDUCTION)) {
+                player.getAttribute(net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY.get())
+                        .applyPersistentModifier(SLIDE_FALL_SPEED_REDUCTION);
+            }
+            ModPacketHandler.INSTANCE.sendToServer(new CClimbingActionPacket(CClimbingActionPacket.ClimbingAction.ATTACH, player.getPosY()));
+            return;
+        }
+
+        if (player.getAttribute(net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY.get()).hasModifier(SLIDE_FALL_SPEED_REDUCTION)) {
+            player.getAttribute(net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY.get())
+                    .removeModifier(SLIDE_FALL_SPEED_REDUCTION);
+            cap.setSliding(false);
+        }
+
         // switch gravity off and update capability
         player.setNoGravity(true);
         player.fallDistance = 0.0f;
+
+        // update capability
+        // TODO
 
         if (player.world.isRemote) {
             // if on client, handle movement and inform server of action
@@ -148,5 +188,13 @@ public class ClimbingPickItem extends PickaxeItem {
             // if on client, inform server of action
             ModPacketHandler.INSTANCE.sendToServer(new CClimbingActionPacket(CClimbingActionPacket.ClimbingAction.RELEASE, player.getPosY()));
         }
+    }
+
+    public void onLand() {
+
+    }
+
+    public void onStartSliding() {
+        
     }
 }

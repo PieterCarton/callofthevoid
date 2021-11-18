@@ -28,6 +28,7 @@ public class EntityJumpHandler {
             // reset number of jumps made by player on climbing capability
             LazyOptional<ClimbingHandler> climbingCapability = player.getCapability(CLIMBING_HANDLER_CAPABILITY);
             climbingCapability.ifPresent(cap -> cap.resetJumps());
+            climbingCapability.ifPresent(cap -> cap.setSliding(false));
         }
     }
 }
