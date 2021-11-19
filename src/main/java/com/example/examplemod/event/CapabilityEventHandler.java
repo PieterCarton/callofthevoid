@@ -21,7 +21,6 @@ public class CapabilityEventHandler {
     @SubscribeEvent
     public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> evt) {
         if (evt.getObject() instanceof PlayerEntity) {
-            System.out.println("Instance of cap attached to player");
             ClimbingHandler instance = new ClimbingHandler();
             evt.addCapability(CapabilityClimbing.CLIMBING_HANDLER_CAPABILITY_NAME,
                     new ICapabilitySerializable<CompoundNBT>()  {

@@ -10,7 +10,8 @@ public class CClimbingActionPacket extends ClientToServerPacket {
     public enum ClimbingAction{
         ATTACH,
         RELEASE,
-        LEAP
+        LEAP,
+        SLIDE
     }
 
     private ClimbingAction action;
@@ -39,6 +40,9 @@ public class CClimbingActionPacket extends ClientToServerPacket {
                 break;
             case RELEASE:
                 climbingPick.onRelease(player);
+                break;
+            case SLIDE:
+                climbingPick.onStartSliding(player);
         }
     }
 

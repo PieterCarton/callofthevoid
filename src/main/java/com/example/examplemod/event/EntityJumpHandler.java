@@ -1,6 +1,8 @@
 package com.example.examplemod.event;
 
 import com.example.examplemod.capability.climbing.ClimbingHandler;
+import com.example.examplemod.item.ClimbingPickItem;
+import com.example.examplemod.setup.ModItems;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,10 +27,8 @@ public class EntityJumpHandler {
     public static void handleEntityFall(LivingFallEvent evt) {
         if (evt.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity)evt.getEntity();
-            // reset number of jumps made by player on climbing capability
-            LazyOptional<ClimbingHandler> climbingCapability = player.getCapability(CLIMBING_HANDLER_CAPABILITY);
-            climbingCapability.ifPresent(cap -> cap.resetJumps());
-            climbingCapability.ifPresent(cap -> cap.setSliding(false));
+            ClimbingPickItem climbingPick = (ClimbingPickItem) ModItems.CLIMBING_PICK_ITEM.get();
+            climbingPick.onLand(player);
         }
     }
 }
