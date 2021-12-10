@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "attached=false": {
+      "model": "callofthevoidmod:block/rope_bottom"
+    },
+    "attached=true": {
+      "model": "callofthevoidmod:block/rope_centre"
+    }
+  }
+}

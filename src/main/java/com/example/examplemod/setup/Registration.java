@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvent;
@@ -40,6 +41,7 @@ public class Registration {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CallOfTheVoidMod.MOD_ID);
     public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, CallOfTheVoidMod.MOD_ID);
     public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, CallOfTheVoidMod.MOD_ID);
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, CallOfTheVoidMod.MOD_ID);
 
 
     public static void register(){
@@ -49,6 +51,7 @@ public class Registration {
         ITEMS.register(modEventBus);
         CONTAINERS.register(modEventBus);
         TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        PARTICLE_TYPES.register(modEventBus);
         ModPacketHandler.registerPackets();
 
         ModSounds.init();

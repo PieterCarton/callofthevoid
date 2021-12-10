@@ -3,7 +3,9 @@ package com.example.examplemod.item;
 import com.example.examplemod.capability.climbing.ClimbingHandler;
 import com.example.examplemod.network.CClimbingActionPacket;
 import com.example.examplemod.network.ModPacketHandler;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -12,14 +14,15 @@ import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.PickaxeItem;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.particles.BlockParticleData;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
@@ -41,13 +44,19 @@ public class ClimbingPickItem extends PickaxeItem {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-
+        if (!playerIn.world.isRemote) {
+            ServerWorld world = (ServerWorld) playerIn.world;
+            System.out.println("particles spawned");
+            Vector3d particlePos = playerIn.getPositionVec();
+            world.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, Blocks.STONE.getDefaultState()), particlePos.getX(), particlePos.getY(), particlePos.getZ(), 10, 0.0, 0.0, 0.0, 0.3);
+        }
         if (worldIn.isRemote() && currentCooldown < 0 && canClimbOnWall(playerIn)) {
             currentCooldown = USAGE_COOLDOWN;
             if (playerIn.hasNoGravity() == true) {
                 onRelease(playerIn);
             } else {
                 playerIn.swingArm(handIn);
+                worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.PLAYERS, 1.0f, 1.0f);
                 onAttach(playerIn);
             }
         }
@@ -55,16 +64,31 @@ public class ClimbingPickItem extends PickaxeItem {
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
+    // TODO needs refactor
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (!(entityIn instanceof PlayerEntity)) {
             return;
         }
+
         PlayerEntity player = (PlayerEntity) entityIn;
-
-
         LazyOptional<ClimbingHandler> climbingCapability = player.getCapability(CLIMBING_HANDLER_CAPABILITY);
         ClimbingHandler cap = climbingCapability.orElse(new ClimbingHandler());
+
+        // check if attached blocks still valid
+        if (cap.isClimbing()) {
+            Direction attachDirection = cap.getAttachDirection();
+            BlockPos upperLookBlockPos = player.getPosition().add(attachDirection.getDirectionVec());
+            BlockPos lowerLookBlockPos = upperLookBlockPos.add(Direction.DOWN.getDirectionVec());
+
+            if (!worldIn.getBlockState(upperLookBlockPos).getMaterial().blocksMovement() && !worldIn.getBlockState(lowerLookBlockPos).getMaterial().blocksMovement()) {
+                onRelease(player);
+            }
+        }
+
+        if (cap.isClimbing() && player.isOnGround()) {
+            onLand(player);
+        }
 
         if (cap.isSliding()) {
             player.fallDistance = 0.0f;
@@ -72,16 +96,25 @@ public class ClimbingPickItem extends PickaxeItem {
                 // attach once again when stable height has been reached
                 onAttach(player);
             }
+            if(player.ticksExisted % 10 == 0) {
+                worldIn.playSound(player, player.getPosition(), SoundEvents.BLOCK_SOUL_SAND_STEP, SoundCategory.PLAYERS, 1.0f, 1.0f);
+                if (!player.world.isRemote) {
+                    Vector3d particlePos = player.getPositionVec();
+                    ((ServerWorld) worldIn).spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, Blocks.STONE.getDefaultState()), particlePos.getX(), particlePos.getY(), particlePos.getZ(), 10, 0.0, 0.0, 0.0, 0.3);
+                }
+            }
         }
 
-        if (entityIn.hasNoGravity() && worldIn.isRemote()) {
-            if (Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
-                onLeap(player);
-            } else if(player.isCrouching() && !cap.isSliding() && player.hasNoGravity()) {
-                System.out.println("start sliding");
-                onStartSliding(player);
-            } else if (entityIn.getMotion().getX() != 0.0 || entityIn.getMotion().getZ() != 0.0) {
+        if (worldIn.isRemote()) {
+            if (entityIn.getMotion().getX() != 0.0 || entityIn.getMotion().getZ() != 0.0) {
                 onRelease(player);
+            } else if (player.hasNoGravity()) {
+                if (Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
+                    System.out.println("leap");
+                    onLeap(player);
+                } else if(player.isCrouching() && !cap.isSliding()) {
+                    onStartSliding(player);
+                }
             }
         }
         currentCooldown--;
@@ -101,7 +134,7 @@ public class ClimbingPickItem extends PickaxeItem {
         BlockPos upperLookBlockPos = player.getPosition().add(lookDirection.getDirectionVec());
         BlockPos lowerLookBlockPos = upperLookBlockPos.add(Direction.DOWN.getDirectionVec());
 
-        if (player.world.getBlockState(upperLookBlockPos).isSolid() || player.world.getBlockState(lowerLookBlockPos).isSolid()) {
+        if (player.world.getBlockState(upperLookBlockPos).getMaterial().blocksMovement() || player.world.getBlockState(lowerLookBlockPos).getMaterial().blocksMovement()) {
             // position of player within blockpos
             Vector3d relativePosition = player.getPositionVec().subtract(player.getPosition().getX() + 0.5,0 ,player.getPosition().getZ() + 0.5);
             double distanceFromCentre = relativePosition.dotProduct(new Vector3d(lookDirectionVec.getX(), 0, lookDirectionVec.getZ()));
@@ -155,6 +188,11 @@ public class ClimbingPickItem extends PickaxeItem {
      * @param player
      */
     public void onAttach(PlayerEntity player) {
+        if (!player.world.isRemote) {
+            ServerWorld world = (ServerWorld) player.world;
+            Vector3d particlePos = player.getLookVec().add(player.getPosX(), player.getEyeHeight(), player.getPosZ());
+            world.spawnParticle(ParticleTypes.CRIT, particlePos.getX(), particlePos.getY(), particlePos.getZ(), 10, 0.0, 0.0, 0.0, 0.5);
+        }
         // check if player is still allowed to attach to wall
         LazyOptional<ClimbingHandler> climbingCapability = player.getCapability(CLIMBING_HANDLER_CAPABILITY);
         ClimbingHandler cap = climbingCapability.orElse(new ClimbingHandler());
@@ -168,6 +206,7 @@ public class ClimbingPickItem extends PickaxeItem {
         // stop sliding
         removeSlidingModifier(player);
         cap.setSliding(false);
+        cap.setClimbing(true);
 
         // switch gravity off and update capability
         player.setNoGravity(true);
@@ -184,7 +223,10 @@ public class ClimbingPickItem extends PickaxeItem {
     }
 
     public void onRelease(PlayerEntity player) {
+        LazyOptional<ClimbingHandler> climbingCapability = player.getCapability(CLIMBING_HANDLER_CAPABILITY);
+        climbingCapability.ifPresent(cap -> cap.setSliding(false));
         player.setNoGravity(false);
+        removeSlidingModifier(player);
 
         if (player.world.isRemote) {
             // if on client, inform server of action
@@ -194,9 +236,12 @@ public class ClimbingPickItem extends PickaxeItem {
 
     public void onLand(PlayerEntity player) {
         // reset number of jumps, stop sliding
+        System.out.println("Side: " + player.world.isRemote);
+        System.out.println("landed");
         LazyOptional<ClimbingHandler> climbingCapability = player.getCapability(CLIMBING_HANDLER_CAPABILITY);
         climbingCapability.ifPresent(cap -> cap.resetJumps());
         climbingCapability.ifPresent(cap -> cap.setSliding(false));
+        climbingCapability.ifPresent(cap -> cap.setClimbing(false));
         player.setNoGravity(false);
         removeSlidingModifier(player);
     }
@@ -205,7 +250,6 @@ public class ClimbingPickItem extends PickaxeItem {
 
         LazyOptional<ClimbingHandler> climbingCapability = player.getCapability(CLIMBING_HANDLER_CAPABILITY);
         ClimbingHandler cap = climbingCapability.orElse(new ClimbingHandler());
-        System.out.println("Is sliding: " + cap.isSliding());
         if (cap.isSliding()) {
             return;
         }

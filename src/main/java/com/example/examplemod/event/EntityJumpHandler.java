@@ -13,6 +13,7 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EntityJumpHandler {
+    /*
     @CapabilityInject(ClimbingHandler.class)
     private static Capability<ClimbingHandler> CLIMBING_HANDLER_CAPABILITY = null;
 
@@ -26,9 +27,9 @@ public class EntityJumpHandler {
     @SubscribeEvent
     public static void handleEntityFall(LivingFallEvent evt) {
         if (evt.getEntity() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity)evt.getEntity();
-            ClimbingPickItem climbingPick = (ClimbingPickItem) ModItems.CLIMBING_PICK_ITEM.get();
-            climbingPick.onLand(player);
+            //PlayerEntity player = (PlayerEntity)evt.getEntity();
+            //ClimbingPickItem climbingPick = (ClimbingPickItem) ModItems.CLIMBING_PICK_ITEM.get();
+            //climbingPick.onLand(player);
         }
-    }
+    }*/
 }

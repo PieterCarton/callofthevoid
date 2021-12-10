@@ -3,9 +3,12 @@ package com.example.examplemod.setup;
 import com.example.examplemod.block.BatteryBlock;
 import com.example.examplemod.block.PipeBlock;
 import com.example.examplemod.block.ReassemblerBlock;
+import com.example.examplemod.block.RopeBlock;
 import com.example.examplemod.itemgroup.ModItemGroups;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -25,6 +28,10 @@ public class ModBlocks {
             new BatteryBlock(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(5.0f).sound(SoundType.SOUL_SAND)));
     public static final RegistryObject<Block> PIPE_BLOCK = register("pipe_block", () ->
             new PipeBlock(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(5.0f).sound(SoundType.SOUL_SAND)));
+    public static final RegistryObject<Block> MINERAL_BLOCK = register("mineral_block", () ->
+            new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(5.0f).sound(SoundType.SOUL_SAND)));
+    public static final RegistryObject<Block> ROPE_BLOCK = registerNoItem("rope_block", () ->
+            new RopeBlock(AbstractBlock.Properties.create(Material.WOOL).sound(SoundType.CLOTH).notSolid()));
 
     static void register(){};
 

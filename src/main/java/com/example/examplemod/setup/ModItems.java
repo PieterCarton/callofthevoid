@@ -49,5 +49,8 @@ public class ModItems {
     public static final RegistryObject<Item> CLIMBING_PICK_ITEM = Registration.ITEMS.register("climbing_pick", () ->
             new ClimbingPickItem(ItemTier.IRON, 4, 2.0f, new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID)));
 
+    public static final RegistryObject<Item> ROPE_BLOCK_ITEM = Registration.ITEMS.register("rope_block", () ->
+            new RopeItem(ModBlocks.ROPE_BLOCK.get(), new Item.Properties().group(ModItemGroups.CALL_OF_THE_VOID)));
+
     static void register(){}
 }

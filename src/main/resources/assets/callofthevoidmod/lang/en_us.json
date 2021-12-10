@@ -2,6 +2,7 @@
   "block.callofthevoidmod.battery_block": "Battery",
   "block.callofthevoidmod.pipe_block": "Basic Essence Tubing",
   "block.callofthevoidmod.reassembler": "Reassembler",
+  "block.callofthevoidmod.rope_block": "Caving Rope",
   "block.callofthevoidmod.test_block": "Test block",
   "callofthevoidmod.subtitle.backseat": "Backseat Disc Start Playing",
   "callofthevoidmod:advancements.red_wrench": "The color is non-negotiable",
@@ -9,9 +10,11 @@
   "callofthevoidmod:advancements.root": "Call of the Void",
   "callofthevoidmod:advancements.root.description": "Start your journey here!",
   "container.callofthevoidmod.reassembler": "Reassembler",
+  "item.callofthevoidmod.climbing_pick": "Climbing Pick",
   "item.callofthevoidmod.custom_ingot": "Custom Ingot",
   "item.callofthevoidmod.entropic_essence": "Entropic Essence",
   "item.callofthevoidmod.essence_analyser": "Essence Analyser",
+  "item.callofthevoidmod.katana": "Katana",
   "item.callofthevoidmod.music_disk_backseat": "Music Disc",
   "item.callofthevoidmod.music_disk_backseat.desc": "Backseat",
   "item.callofthevoidmod.order_essence": "Order Essence",
@@ -20,7 +23,5 @@
   "item.callofthevoidmod.sword_cane": "Sword Cane",
   "item.callofthevoidmod.sword_cane_sheath": "Sword Cane Sheath",
   "item.callofthevoidmod.walking_cane": "Walking Cane",
-  "item.callofthevoidmod.katana": "Katana",
-  "item.callofthevoidmod.climbing_pick": "Climbing Pick",
   "itemGroup.Call of the Void": "Call of the Void"
 }

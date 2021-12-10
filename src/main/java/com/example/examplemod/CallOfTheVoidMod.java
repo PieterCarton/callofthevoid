@@ -3,11 +3,14 @@ package com.example.examplemod;
 import com.example.examplemod.capability.ModCapabilities;
 import com.example.examplemod.event.CapabilityEventHandler;
 import com.example.examplemod.event.EntityJumpHandler;
+import com.example.examplemod.setup.ModBlocks;
 import com.example.examplemod.setup.ModItems;
 import com.example.examplemod.setup.ModSounds;
 import com.example.examplemod.setup.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -58,6 +61,7 @@ public class CallOfTheVoidMod
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
+        RenderTypeLookup.setRenderLayer(ModBlocks.ROPE_BLOCK.get(), RenderType.getCutout());
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
     }

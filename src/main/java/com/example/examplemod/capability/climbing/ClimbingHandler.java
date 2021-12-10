@@ -18,6 +18,8 @@ public class ClimbingHandler {
     private double stableHeight = Double.MAX_VALUE;
     private int jumps = 0;
     private boolean isSliding = false;
+    private boolean isClimbing = false;
+    private Direction attachDirection = Direction.NORTH;
 
     public ClimbingHandler() {}
 
@@ -39,6 +41,18 @@ public class ClimbingHandler {
 
     public void setSliding(boolean sliding) {
         isSliding = sliding;
+    }
+
+    public boolean isClimbing() {
+        return isClimbing;
+    }
+
+    public void setClimbing(boolean climbing) {
+        isClimbing = climbing;
+    }
+
+    public Direction getAttachDirection() {
+        return attachDirection;
     }
 
     /**
