@@ -1,10 +1,16 @@
 {
   "variants": {
-    "attached=false": {
+    "attached=false,top=false": {
       "model": "callofthevoidmod:block/rope_bottom"
     },
-    "attached=true": {
+    "attached=false,top=true": {
+      "model": "callofthevoidmod:block/rope_both"
+    },
+    "attached=true,top=false": {
       "model": "callofthevoidmod:block/rope_centre"
+    },
+    "attached=true,top=true": {
+      "model": "callofthevoidmod:block/rope_top_alt"
     }
   }
 }

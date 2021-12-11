@@ -18,24 +18,21 @@ public class RopeItem extends BlockItem {
     @Nullable
     @Override
     public BlockItemUseContext getBlockItemUseContext(BlockItemUseContext context) {
-        Direction faceDirection = context.getPlacementHorizontalFacing();
+        if (context.hasSecondaryUseForPlayer()) {
+            return context;
+        }
+
+        Direction faceDirection = context.getFace().getOpposite();
         BlockPos.Mutable mutable = context.getPos().toMutable().move(faceDirection);
-        System.out.println("facing " + faceDirection.toString());
-        System.out.println("Called for " + mutable.toString());
         World world = context.getWorld();
         Block ropeBlock = this.getBlock();
         BlockState blockState = world.getBlockState(mutable);
-        System.out.println(blockState.toString());
 
         if (blockState.isIn(ropeBlock)) {
             mutable.move(Direction.DOWN);
-            System.out.println("Start search on " + mutable.toString());
             while (world.getBlockState(mutable).isIn(ropeBlock)) {
-                System.out.println("Rope found on " + mutable.toString());
                 mutable.move(Direction.DOWN);
             }
-
-            System.out.println("Final pos for placement " + mutable.toString());
 
             if (World.isValid(mutable) && world.getBlockState(mutable).isReplaceable(context)) {
                 return BlockItemUseContext.func_221536_a(context, mutable, Direction.UP);

@@ -18,14 +18,18 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class RopeBlock extends Block {
 
     private static final Property<Boolean> attached = BooleanProperty.create("attached");
+    private static final Property<Boolean> top = BooleanProperty.create("top");
 
-    private static final VoxelShape SHAPE = Block.makeCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D);
+    private static final VoxelShape SHAPE_LONG = Block.makeCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D);
+    private static final VoxelShape SHAPE_SHORT = Block.makeCuboidShape(6.0D, 3.0D, 6.0D, 10.0D, 16.0D, 10.0D);
 
     public RopeBlock(Properties properties) {
         super(properties);
@@ -44,7 +48,14 @@ public class RopeBlock extends Block {
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
-        builder.add(attached);
+        builder.add(attached, top);
+    }
+
+    @Override
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        BlockPos above = pos.up();
+        BlockState aboveState = worldIn.getBlockState(above);
+        return aboveState.getMaterial().blocksMovement() || aboveState.isIn(ModBlocks.ROPE_BLOCK.get());
     }
 
     @Nullable
@@ -53,19 +64,35 @@ public class RopeBlock extends Block {
         World world = context.getWorld();
         BlockPos pos = context.getPos();
         boolean isAttached = hasRopeBelow(world, pos);
+        boolean isTop = !world.getBlockState(pos.up()).isIn(ModBlocks.ROPE_BLOCK.get());
 
-        return this.getDefaultState().with(attached, isAttached);
+        return this.getDefaultState().with(attached, isAttached).with(top, isTop);
     }
 
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (!stateIn.get(attached) && facing == Direction.DOWN && facingState.isIn(ModBlocks.ROPE_BLOCK.get())) {
-            return this.getDefaultState().with(attached, true);
+        if (facing == Direction.DOWN) {
+            boolean ropeBelow = facingState.isIn(ModBlocks.ROPE_BLOCK.get());
+            if (!stateIn.get(attached) && ropeBelow) {
+                return stateIn.with(attached, true);
+            }
+            if (stateIn.get(attached) && !ropeBelow) {
+                return stateIn.with(attached, false);
+            }
+        } else if (facing == Direction.UP) {
+            if (!worldIn.isRemote()) {
+                worldIn.getPendingBlockTicks().scheduleTick(currentPos, this, 1);
+            }
         }
 
-        // schedule tick
-
         return stateIn;
+    }
+
+    @Override
+    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+        if (!isValidPosition(state, worldIn, pos)) {
+            worldIn.destroyBlock(pos, true);
+        }
     }
 
     private boolean hasRopeBelow(World world, BlockPos pos) {
@@ -75,8 +102,13 @@ public class RopeBlock extends Block {
         return stateBelow.isIn(ModBlocks.ROPE_BLOCK.get());
     }
 
+
+
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return SHAPE;
+        if (!state.get(attached)) {
+            return SHAPE_SHORT;
+        }
+        return SHAPE_LONG;
     }
 }
